@@ -86,4 +86,20 @@ def parse_author_notes(source):
         f.writelines(wiki_text)
 
 
-parse_author_notes('artists.json')
+def parse_tag_notes(source):
+    tags = json.load(open(source, 'r')).keys()
+    wiki_text = []
+    for tag in tags:
+        print(f"Parsing tag: {tag}")
+        query = '_'.join(tag.split(' '))
+        try:
+            tag_note = request_wiki_page(query)
+            wiki_text += tag_note
+        except KeyError:
+            print("\tFailed to parse...")
+    with open('tag_long_text.txt', 'w') as f:
+        # for txt in wiki_text:
+        f.writelines(wiki_text)
+
+# parse_author_notes('artists.json')
+parse_tag_notes('tags.json')
